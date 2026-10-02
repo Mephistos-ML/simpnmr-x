@@ -6,7 +6,7 @@
 import numpy as np
 from scipy.optimize import curve_fit
 
-from simpnmr_x.core.conv.a3_to_reduced import a3_to_reduced
+from simpnmr_x.core.conv.a3.a3_to_reduced import a3_to_reduced
 from simpnmr_x.core.fitting.variable_temperatures.components import (
     compute_curie_prefactor,
 )

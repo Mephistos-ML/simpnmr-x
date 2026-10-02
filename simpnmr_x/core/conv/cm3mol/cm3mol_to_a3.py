@@ -6,7 +6,7 @@
 import numpy as np
 from numpy.typing import NDArray
 
-from simpnmr_x.core.conv.a3_to_cm3mol import A3_TO_CM3MOL
+from simpnmr_x.core.conv.a3.a3_to_cm3mol import A3_TO_CM3MOL
 
 CM3MOL_TO_A3 = 1.0 / A3_TO_CM3MOL
 

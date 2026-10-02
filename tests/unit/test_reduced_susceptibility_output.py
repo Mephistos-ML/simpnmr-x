@@ -6,9 +6,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from simpnmr_x.core.conv.a3_to_cm3mol import A3_TO_CM3MOL
-from simpnmr_x.core.conv.a3_to_reduced import a3_to_reduced
-from simpnmr_x.core.conv.reduced_to_a3 import reduced_to_a3
+from simpnmr_x.core.conv.a3.a3_to_cm3mol import A3_TO_CM3MOL
+from simpnmr_x.core.conv.a3.a3_to_reduced import a3_to_reduced
+from simpnmr_x.core.conv.reduced.reduced_to_a3 import reduced_to_a3
 from simpnmr_x.core.fitting.variable_temperatures.components import (
     compute_curie_prefactor,
 )

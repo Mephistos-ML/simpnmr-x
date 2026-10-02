@@ -10,7 +10,7 @@ from typing import Any
 
 import numpy as np
 
-from simpnmr_x.core.conv.freq_to_a3 import a_tensor_mhz_to_a3
+from simpnmr_x.core.conv.freq.freq_to_a3 import a_tensor_mhz_to_a3
 from simpnmr_x.core.domain.mol import Hyperfine, Molecule
 
 logger = logging.getLogger(__name__)

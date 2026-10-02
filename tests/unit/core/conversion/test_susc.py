@@ -1,7 +1,7 @@
 import numpy as np
 
-from simpnmr_x.core.conv.a3_to_cm3mol import a3_to_cm3mol
-from simpnmr_x.core.conv.cm3mol_to_a3 import cm3mol_to_a3
+from simpnmr_x.core.conv.a3.a3_to_cm3mol import a3_to_cm3mol
+from simpnmr_x.core.conv.cm3mol.cm3mol_to_a3 import cm3mol_to_a3
 
 
 def test_susceptibility_unit_converters_are_inverse():

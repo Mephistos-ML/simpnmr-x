@@ -9,7 +9,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from typing import Literal
 
-from simpnmr_x.core.conv.freq_to_ppm import signal_widths_hz_to_ppm
+from simpnmr_x.core.conv.freq.freq_to_ppm import signal_widths_hz_to_ppm
 from simpnmr_x.core.domain.exp import Experiment
 from simpnmr_x.core.domain.mol import Molecule
 

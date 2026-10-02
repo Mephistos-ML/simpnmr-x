@@ -21,8 +21,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Final, Literal
 
-from simpnmr_x.core.conv.cm3mol_to_a3 import CM3MOL_TO_A3
-from simpnmr_x.core.conv.reduced_to_a3 import reduced_to_a3
+from simpnmr_x.core.conv.cm3mol.cm3mol_to_a3 import CM3MOL_TO_A3
+from simpnmr_x.core.conv.reduced.reduced_to_a3 import reduced_to_a3
 from simpnmr_x.core.fitting.variable_temperatures.components import (
     compute_curie_prefactor,
 )

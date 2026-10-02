@@ -11,7 +11,7 @@ physical models or direct source values.
 import numpy as np
 from numpy.typing import NDArray
 
-from simpnmr_x.core.conv.cm3mol_to_a3 import cm3mol_to_a3
+from simpnmr_x.core.conv.cm3mol.cm3mol_to_a3 import cm3mol_to_a3
 from simpnmr_x.core.domain.tensor import Susceptibility
 from simpnmr_x.core.phys.susc import get_g_corr_iso_susc, get_spin_only_susc
 

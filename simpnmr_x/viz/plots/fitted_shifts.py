@@ -15,8 +15,8 @@ import matplotlib.ticker as ticker
 import numpy as np
 
 from simpnmr_x.core.const import ptable
-from simpnmr_x.core.conv.a3_to_cm3mol import A3_TO_CM3MOL
-from simpnmr_x.core.conv.a3_to_reduced import a3_to_reduced
+from simpnmr_x.core.conv.a3.a3_to_cm3mol import A3_TO_CM3MOL
+from simpnmr_x.core.conv.a3.a3_to_reduced import a3_to_reduced
 from simpnmr_x.core.domain.exp import Experiment
 from simpnmr_x.core.domain.mol import Molecule
 from simpnmr_x.core.fitting.susceptibility.models.base import SusceptibilityModel

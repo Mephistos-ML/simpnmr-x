@@ -37,7 +37,7 @@ from simpnmr_x.app.policies.susc import resolve_susceptibility_source
 # Core / domain
 from simpnmr_x.core.const.gammas import NUCLEAR_GAMMAS
 from simpnmr_x.core.const.physics import EGAMMA
-from simpnmr_x.core.conv.a3_to_freq import a3_to_mhz
+from simpnmr_x.core.conv.a3.a3_to_freq import a3_to_mhz
 from simpnmr_x.core.domain.mol import Molecule
 from simpnmr_x.core.relaxation.eval import evaluate_relaxation_rates
 

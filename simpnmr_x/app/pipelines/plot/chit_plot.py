@@ -9,7 +9,7 @@ import numpy as np
 
 from simpnmr_x.app.params.options import PlotChiTRunOptions
 from simpnmr_x.cfg.plot_chit import ChiTSourceConfig, PlotChiTConfig
-from simpnmr_x.core.conv.a3_to_cm3mol import a3_to_cm3mol
+from simpnmr_x.core.conv.a3.a3_to_cm3mol import a3_to_cm3mol
 from simpnmr_x.core.domain.tensor import canonical_principal_axes
 from simpnmr_x.core.fitting.variable_temperatures.components import (
     calculate_E_D_components,
