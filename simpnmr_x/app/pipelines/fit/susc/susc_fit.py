@@ -226,6 +226,7 @@ def run_fit_susc(config, options: FitSuscRunOptions | None = None) -> int:
             input_units=config.susc_fit_input_units,
             temperature=experiment.temperature,
             spin=base_molecule.electronic.spin_S,
+            total_J=base_molecule.electronic.total_J,
         )
         susc_models.append(model_to_use(fit_vars, fix_vars))
 

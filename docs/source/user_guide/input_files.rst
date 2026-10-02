@@ -612,8 +612,9 @@ Used in susceptibility fitting workflows.
 .. note::
 
    ``susc_fit:input_units: reduced`` uses the Curie-normalised convention already. Each susceptibility component is interpreted as
-   ``chi_reduced = chi * T / Curie_prefactor(S)`` and is converted internally to
-   ``Å^3`` units for the actual fit. Dimensionless parameters such as
+   ``chi_reduced = chi * T / Curie_prefactor(J)`` and is converted internally to
+   ``Å^3`` units for the actual fit. The prefactor uses ``total_momentum_J``
+   when provided, otherwise ``spin``. Dimensionless parameters such as
    ``rho_over_ax`` are not rescaled.
 
 Temperature Dependence of Magnetic Susceptibility Fitting
