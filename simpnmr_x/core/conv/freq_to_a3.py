@@ -15,7 +15,7 @@ from simpnmr_x.core.const.physics import EGAMMA, MU0, H
 from simpnmr_x.core.util.strings import remove_numbers
 
 
-def a_tensor_mhz_to_ang(a_tensors: dict[str, NDArray]) -> dict[str, NDArray]:
+def a_tensor_mhz_to_a3(a_tensors: dict[str, NDArray]) -> dict[str, NDArray]:
     """Converts hyperfine A tensors from MHz to ``ppm Å^-3``.
 
     Uses the gyromagnetic ratio of each nucleus (looked up from `NUCLEAR_GAMMAS`)
@@ -30,7 +30,7 @@ def a_tensor_mhz_to_ang(a_tensors: dict[str, NDArray]) -> dict[str, NDArray]:
     """
 
     a_tensors_ang = {
-        key: _mhz_to_angstrom(val, NUCLEAR_GAMMAS[remove_numbers(key)])
+        key: _mhz_to_a3(val, NUCLEAR_GAMMAS[remove_numbers(key)])
         for key, val in a_tensors.items()
         if remove_numbers(key) in NUCLEAR_GAMMAS.keys()
         and NUCLEAR_GAMMAS[remove_numbers(key)]
@@ -39,7 +39,7 @@ def a_tensor_mhz_to_ang(a_tensors: dict[str, NDArray]) -> dict[str, NDArray]:
     return a_tensors_ang
 
 
-def _mhz_to_angstrom(val_mhz: NDArray | float, nuclear_gamma: float) -> NDArray | float:
+def _mhz_to_a3(val_mhz: NDArray | float, nuclear_gamma: float) -> NDArray | float:
     """Converts a hyperfine coupling value from MHz to ``ppm Å^-3``.
 
     Args:

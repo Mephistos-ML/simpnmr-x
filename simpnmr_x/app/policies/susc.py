@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import Final, Literal
 
 from simpnmr_x.core.conv.cm3mol_to_a3 import CM3MOL_TO_A3
+from simpnmr_x.core.conv.reduced_to_a3 import reduced_to_a3
 from simpnmr_x.core.fitting.variable_temperatures.components import (
     compute_curie_prefactor,
 )
@@ -338,4 +339,6 @@ def _get_susc_fit_input_scale_to_a3(
             "susc_fit:input_units='reduced' requires a positive experiment temperature"
         )
 
-    return compute_curie_prefactor(spin, total_J=total_J) / float(temperature)
+    return float(
+        reduced_to_a3(1.0, temperature, compute_curie_prefactor(spin, total_J=total_J))
+    )

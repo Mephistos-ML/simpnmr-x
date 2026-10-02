@@ -10,7 +10,7 @@ from typing import Any
 
 import numpy as np
 
-from simpnmr_x.core.conv.freq_to_ang import a_tensor_mhz_to_ang
+from simpnmr_x.core.conv.freq_to_a3 import a_tensor_mhz_to_a3
 from simpnmr_x.core.domain.mol import Hyperfine, Molecule
 
 logger = logging.getLogger(__name__)
@@ -187,11 +187,11 @@ def build_hfc_from_qca(
     if converter is None:
         pass
     elif converter == "MHz_to_Ang-3":
-        a_fc = a_tensor_mhz_to_ang(a_fc)
-        a_sd = a_tensor_mhz_to_ang(a_sd)
+        a_fc = a_tensor_mhz_to_a3(a_fc)
+        a_sd = a_tensor_mhz_to_a3(a_sd)
 
         a_orb_present = {k: v for k, v in a_orb.items() if v is not None}
-        a_orb_present = a_tensor_mhz_to_ang(a_orb_present)
+        a_orb_present = a_tensor_mhz_to_a3(a_orb_present)
         a_orb = {k: a_orb_present.get(k) for k in a_orb}
     else:
         raise ValueError(f"Unknown converter: {converter}")

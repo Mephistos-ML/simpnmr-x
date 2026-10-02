@@ -37,7 +37,7 @@ from simpnmr_x.app.policies.susc import resolve_susceptibility_source
 # Core / domain
 from simpnmr_x.core.const.gammas import NUCLEAR_GAMMAS
 from simpnmr_x.core.const.physics import EGAMMA
-from simpnmr_x.core.conv.ang_to_freq import angstrom_to_mhz
+from simpnmr_x.core.conv.a3_to_freq import a3_to_mhz
 from simpnmr_x.core.domain.mol import Molecule
 from simpnmr_x.core.relaxation.eval import evaluate_relaxation_rates
 
@@ -417,7 +417,7 @@ def run_predict(config, options: PredictRunOptions | None = None) -> int:
                 else (f"orca_{section}" if backend == "orca" else backend),
             )
         ),
-        susc_units=getattr(config, "susc_units", "A3"),
+        susc_units=options.susc_units,
     )
 
     # Write shift and peak data to file
@@ -516,7 +516,7 @@ def _apply_relaxation_linewidths(
         # Note: conversion depends on the nuclear gyromagnetic ratio for each nucleus.
         A_iso_dict_MHz = {
             nuc.label: float(
-                angstrom_to_mhz(
+                a3_to_mhz(
                     1.0 / 3.0 * np.trace(nuc.A.fc),
                     nuclear_gamma=NUCLEAR_GAMMAS[remove_numbers(nuc.label)],
                 )

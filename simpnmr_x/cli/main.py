@@ -388,7 +388,7 @@ def read_args(arg_list=None):
     fit_susc.add_argument(
         "--susc_units",
         "-su",
-        choices=["cm3 mol-1", "A3"],
+        choices=["cm3 mol-1", "A3", "reduced"],
         metavar="<str>",
         type=str,
         default="A3",
@@ -639,7 +639,7 @@ def read_args(arg_list=None):
     predict.add_argument(
         "--susc_units",
         "-su",
-        choices=["cm3 mol-1", "A3"],
+        choices=["cm3 mol-1", "A3", "reduced"],
         metavar="<str>",
         type=str,
         default="A3",

@@ -6,6 +6,7 @@
 import numpy as np
 from scipy.optimize import curve_fit
 
+from simpnmr_x.core.conv.a3_to_reduced import a3_to_reduced
 from simpnmr_x.core.fitting.variable_temperatures.components import (
     compute_curie_prefactor,
 )
@@ -114,13 +115,9 @@ def fit_chit_linear_model(
 
         return _model(T, params["intercept"], params["slope"], params["tip"])
 
-    # Compute chiT values and chiT errors at the given temperatures
-    chiT = chi_vals * fit_temps
-    chi_errT = chi_errors * fit_temps
-
     # Curie-normalised (dimensionless) values
-    chiT_reduced = chiT / norm_factor
-    chi_errT_reduced = chi_errT / norm_factor
+    chiT_reduced = a3_to_reduced(chi_vals, fit_temps, norm_factor)
+    chi_errT_reduced = a3_to_reduced(chi_errors, fit_temps, norm_factor)
 
     # Detect the degenerate case of identically zero chiT
     if np.allclose(chiT_reduced, 0.0):
@@ -302,10 +299,10 @@ def compute_chit_high_t_limit(
     norm_factor = compute_curie_prefactor(spin, total_J=total_J)
 
     # chiT in internal units -> Curie-normalised (dimensionless)
-    chiT_reduced = (chi_vals * fit_temps) / norm_factor
+    chiT_reduced = a3_to_reduced(chi_vals, fit_temps, norm_factor)
 
     chi_errors = np.asarray(chi_errors, dtype=float)
-    errT_reduced = (chi_errors * fit_temps) / norm_factor
+    errT_reduced = a3_to_reduced(chi_errors, fit_temps, norm_factor)
 
     idx = int(np.nanargmax(fit_temps))
 

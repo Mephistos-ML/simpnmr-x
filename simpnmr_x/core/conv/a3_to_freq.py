@@ -12,7 +12,7 @@ from numpy.typing import NDArray
 from simpnmr_x.core.const.physics import EGAMMA, MU0, H
 
 
-def angstrom_to_mhz(
+def a3_to_mhz(
     val_ang: NDArray | float,
     nuclear_gamma: float,
 ) -> NDArray | float:

@@ -16,9 +16,13 @@ import numpy as np
 
 from simpnmr_x.core.const import ptable
 from simpnmr_x.core.conv.a3_to_cm3mol import A3_TO_CM3MOL
+from simpnmr_x.core.conv.a3_to_reduced import a3_to_reduced
 from simpnmr_x.core.domain.exp import Experiment
 from simpnmr_x.core.domain.mol import Molecule
 from simpnmr_x.core.fitting.susceptibility.models.base import SusceptibilityModel
+from simpnmr_x.core.fitting.variable_temperatures.components import (
+    compute_curie_prefactor,
+)
 from simpnmr_x.viz.layout.canvas import create_header_plot_canvas
 from simpnmr_x.viz.layout.export import render_figure
 from simpnmr_x.viz.layout.label import resolve_label_layout
@@ -81,7 +85,7 @@ def plot_fitted_shifts(
         save_name: Output image file name.
         window_title: Figure window title.
         susc_units: Units for reporting susceptibility values in the annotation.
-        Supported: ``"A3"`` and ``"cm3 mol-1"``.
+        Supported: ``"A3"``, ``"cm3 mol-1"``, and ``"reduced"`` (χT/C).
         verbose: If ``True``, prints the output file name when saving.
 
     Returns:
@@ -153,12 +157,26 @@ def plot_fitted_shifts(
 
     if susc_units == "A3":
         conv = 1.0
-        model_unit_label = "Å³"
     elif susc_units == "cm3 mol-1":
         conv = A3_TO_CM3MOL
-        model_unit_label = "cm³ mol⁻¹"
+    elif susc_units == "reduced":
+        momentum = molecule.electronic.total_J
+        if momentum is None:
+            momentum = molecule.electronic.spin_S
+        if momentum is None or not np.isfinite(momentum) or momentum <= 0:
+            raise ValueError("Reduced output requires positive finite J or spin S")
+        conv = float(
+            a3_to_reduced(
+                1.0, molecule.susc.temperature, compute_curie_prefactor(momentum)
+            )
+        )
     else:
-        raise ValueError("Unsupported susc_units. Expected 'A3' or 'cm3 mol-1'.")
+        raise ValueError("Expected susceptibility units A3, cm3 mol-1, or reduced")
+    model_unit_label = {
+        "A3": "Å³",
+        "cm3 mol-1": "cm³ mol⁻¹",
+        "reduced": "reduced χT/C",
+    }[susc_units]
 
     fit_lines = [
         f"R²adj: {susc_model.adj_r2:.4f}",
@@ -168,12 +186,15 @@ def plot_fitted_shifts(
 
     model_lines: list[str] = []
     for name in susc_model.VARNAMES:
-        val = float(susc_model.final_var_values[name]) * conv
+        parameter_scale = (
+            1.0 if name in {"rho_over_ax", "alpha", "beta", "gamma"} else conv
+        )
+        val = float(susc_model.final_var_values[name]) * parameter_scale
         label = parameter_label_mathtext(name)
 
         err = susc_model.fit_stdev.get(name)
         if name in susc_model.fit_vars and err is not None and err > 0:
-            err_val = float(err) * conv
+            err_val = float(err) * parameter_scale
             compact_value = format_compact_uncertainty(val, err_val)
             model_lines.append(f"{label}: {compact_value}")
         else:
