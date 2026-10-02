@@ -2,6 +2,43 @@
 
 <!-- version list -->
 
+## v1.20.0 (2026-10-02)
+
+### Bug Fixes
+
+- **app**: Correct analytic TIP subtraction across temperatures
+  ([`902f861`](https://github.com/Mephistos-ML/simpnmr-x/commit/902f861cbda34003fbfa84a9158ec27fc84f190b))
+
+- **app**: Use total angular momentum for reduced fit units
+  ([`fc26e99`](https://github.com/Mephistos-ML/simpnmr-x/commit/fc26e993caecef6eb515710d2f7f10c87a5d63ae))
+
+- **plot**: Scale TIP correction by temperature
+  ([`0fbf633`](https://github.com/Mephistos-ML/simpnmr-x/commit/0fbf6332fb89387e73a92e66f1016a059a05032b))
+
+### Continuous Integration
+
+- Add Codecov coverage reporting
+  ([`e5f18d0`](https://github.com/Mephistos-ML/simpnmr-x/commit/e5f18d008930fa31ff8054275e21b2649d1e6405))
+
+### Documentation
+
+- **readme**: Update Codecov badge repository
+  ([`fcf9924`](https://github.com/Mephistos-ML/simpnmr-x/commit/fcf9924b55549757d7fa1f0c035e074822cb95ca))
+
+### Features
+
+- **app**: Support reduced susceptibility output units
+  ([`310fad7`](https://github.com/Mephistos-ML/simpnmr-x/commit/310fad77dc0b07f1348b6b452ba48ac8eef78be0))
+
+- **benchmarks**: Add signal-mean functional curves
+  ([`dc02a24`](https://github.com/Mephistos-ML/simpnmr-x/commit/dc02a24b3e3a498b3a56a03a32f7690f33f9ef53))
+
+### Refactoring
+
+- **core**: Group conversion modules by source units
+  ([`60b7307`](https://github.com/Mephistos-ML/simpnmr-x/commit/60b7307b07986e9597d905f930f59f4a7af98b5b))
+
+
 ## v1.19.0 (2026-09-24)
 
 ### Bug Fixes
