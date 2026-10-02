@@ -63,6 +63,18 @@ jobs:
         run: >-
           python -m pytest tests/unit tests/smoke
           tests/integration/experimental -k 'not gmm'
+          --cov=simpnmr_x --cov-report=term-missing
+          --cov-report=xml:coverage.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./coverage.xml
+          flags: python
+          name: python-${{ matrix.python-version }}
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   synthetic:
     name: Synthetic GMM acceptance tests (opt-in)
