@@ -7,8 +7,7 @@ import os
 
 from simpnmr_x.app.params.options import BenchmarkAfcRunOptions
 from simpnmr_x.app.pipelines.benchmarks.hyperfine.runner import (
-    plot_hyperfine_benchmark_summary,
-    plot_hyperfine_functional_max_summary,
+    plot_hyperfine_functional_mean_summary,
 )
 from simpnmr_x.app.pipelines.benchmarks.hyperfine.sources import (
     group_loaded_sources_by_functional,
@@ -20,10 +19,6 @@ from simpnmr_x.core.benchmarks.hyperfine.a_fc import (
     summarize_a_fc_ranges_by_functional_and_nucleus,
 )
 from simpnmr_x.io.csv.benchmarks.a_fc import save_a_fc_benchmark_max_csv
-from simpnmr_x.viz.plots.benchmarks import (
-    plot_a_fc_functional_max_curve,
-    plot_a_fc_spread,
-)
 from simpnmr_x.viz.style.theme import apply_profile
 
 
@@ -51,21 +46,18 @@ def run_benchmark_a_fc(config, options: BenchmarkAfcRunOptions | None = None) ->
         summarize_a_fc_max_report_rows(a_fc_summary, a_fc_max_by_nucleus),
         os.path.join(config.project_name, "A_FC_benchmark_max.csv"),
     )
-    plot_hyperfine_benchmark_summary(
+    plot_hyperfine_functional_mean_summary(
         a_fc_summary,
+        isotopes_by_nucleus={
+            nucleus.label_nn: nucleus.isotope
+            for source in signals
+            for nucleus in source["molecule"].nuclei
+        },
         output_dir=config.project_name,
         spec=spec,
         show=options.runtime.show_plots,
-        plot_spread=plot_a_fc_spread,
-        filename_metric="A_FC",
-        window_metric="A_fc",
-    )
-    plot_hyperfine_functional_max_summary(
-        a_fc_max_by_nucleus,
-        output_dir=config.project_name,
-        spec=spec,
-        show=options.runtime.show_plots,
-        plot_max_curve=plot_a_fc_functional_max_curve,
+        y_label=r"$\overline{A}_\mathregular{FC}$ (ppm Å$^\mathregular{-3}$)",
+        title_metric=r"$\overline{A}_\mathregular{FC}$",
         filename_metric="A_FC",
         log_metric="A_fc",
         window_metric="A_fc",

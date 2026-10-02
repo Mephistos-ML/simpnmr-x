@@ -88,17 +88,23 @@ Both workflows create the directory specified in ``project:name``.
 Files produced by ``benchmark a_fc``:
 
 - ``A_FC_benchmark_max.csv``: maximum ``A_fc`` values by functional and nucleus.
-- ``<FUNCTIONAL>_<NUCLEUS>_A_FC_benchmark_spread.pdf``: ``A_fc`` spread across
-  signal labels for one functional.
-- ``<NUCLEUS>_A_FC_benchmark_max_curve.pdf``: sorted maximum ``A_fc`` values for
-  each nucleus.
+- ``<NUCLEUS>_A_FC_benchmark_mean_curves.pdf``: one colour-coded mean ``A_fc``
+  curve per signal across functionals, with math-formatted signal labels.
 
 Files produced by ``benchmark a_sd``:
 
-- ``<FUNCTIONAL>_<NUCLEUS>_A_SD_benchmark_spread.pdf``: ``A_sd`` spread across
-  signal labels for one functional.
-- ``<NUCLEUS>_A_SD_benchmark_max_curve.pdf``: sorted maximum ``A_sd`` values for
-  each nucleus.
+- ``<NUCLEUS>_A_SD_benchmark_mean_curves.pdf``: one colour-coded mean ``A_sd``
+  curve per signal across functionals, with math-formatted signal labels.
+
+Plot titles and y-axis labels denote the mean with an overline:
+:math:`\overline{A}_{\mathrm{FC}}` and
+:math:`\overline{A}_{\mathrm{SD}}^{\mathrm{ax}}`.
+Each plotted value is the arithmetic mean of all nucleus values sharing the
+same signal label and nucleus type across sources for that functional.
+
+In each mean-curves plot, functionals are ordered from lower to higher mean
+absolute coupling across the signals of that nucleus and hyperfine component.
+The ordering is therefore determined separately for the H/C and A_fc/A_sd plots.
 
 Notes
 -----
