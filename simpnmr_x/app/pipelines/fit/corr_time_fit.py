@@ -30,7 +30,7 @@ from simpnmr_x.app.policies.relax import average_relaxation_rates_by_signal_labe
 # Core / domain
 from simpnmr_x.core.const.gammas import NUCLEAR_GAMMAS
 from simpnmr_x.core.const.physics import EGAMMA
-from simpnmr_x.core.conv.ang_to_freq import angstrom_to_mhz
+from simpnmr_x.core.conv.a3.a3_to_freq import a3_to_mhz
 from simpnmr_x.core.relaxation.eval import evaluate_relaxation_rates
 
 # Tools
@@ -456,7 +456,7 @@ def run_fit_corr_time(config, options: FitCorrTimeRunOptions | None = None) -> i
         # Dictionaries for relaxation calculations
         A_fc_dict = {
             nuc.label: float(
-                angstrom_to_mhz(
+                a3_to_mhz(
                     np.trace(nuc.A.fc) / 3.0,
                     NUCLEAR_GAMMAS[remove_numbers(nuc.label)],
                 )

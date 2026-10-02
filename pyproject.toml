@@ -53,6 +53,8 @@ dependencies = [
 dev = [
     "pre-commit>=4.0",
     "pytest>=8.0",
+    "pytest-cov>=7.0",
+    "coverage>=7.10.6",
     "ruff>=0.16.1",
 ]
 synthetic = [
@@ -107,3 +109,8 @@ markers = [
 
 log_cli = true
 log_cli_level = "INFO"
+
+[tool.coverage.run]
+source = ["simpnmr_x"]
+relative_files = true
+patch = ["subprocess"]

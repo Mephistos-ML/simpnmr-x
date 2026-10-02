@@ -93,3 +93,26 @@ def test_resolve_susc_fit_variables_requires_spin_for_reduced_units():
             temperature=200.0,
             spin=None,
         )
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("temperature", [200.0, 300.0])
+def test_reduced_fit_variables_use_total_j_when_provided(temperature):
+    fit_vars, fix_vars = resolve_susc_fit_variables(
+        raw_variables={
+            "iso": ["fit", 0.5],
+            "ax": ["fix", -0.2],
+            "rho_over_ax": ["fix", 0.25],
+            "alpha": ["fix", 30.0],
+        },
+        input_units="reduced",
+        temperature=temperature,
+        spin=1.0,
+        total_J=2.5,
+    )
+
+    scale = MU0 * MUB**2 * 2.5 * 3.5 / (3.0 * KB) * 1e30 / temperature
+    assert fit_vars["iso"] == pytest.approx(0.5 * scale)
+    assert fix_vars["ax"] == pytest.approx(-0.2 * scale)
+    assert fix_vars["rho_over_ax"] == 0.25
+    assert fix_vars["alpha"] == 30.0

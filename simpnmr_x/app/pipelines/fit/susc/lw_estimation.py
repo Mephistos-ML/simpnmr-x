@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import os
 
-from simpnmr_x.core.conv.freq_to_ppm import signal_widths_hz_to_ppm
+from simpnmr_x.core.conv.freq.freq_to_ppm import signal_widths_hz_to_ppm
 from simpnmr_x.core.domain.exp import Experiment
 from simpnmr_x.core.domain.mol import Molecule
 from simpnmr_x.core.fitting.linewidth import (

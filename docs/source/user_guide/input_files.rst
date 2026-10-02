@@ -612,8 +612,9 @@ Used in susceptibility fitting workflows.
 .. note::
 
    ``susc_fit:input_units: reduced`` uses the Curie-normalised convention already. Each susceptibility component is interpreted as
-   ``chi_reduced = chi * T / Curie_prefactor(S)`` and is converted internally to
-   ``Å^3`` units for the actual fit. Dimensionless parameters such as
+   ``chi_reduced = chi * T / Curie_prefactor(J)`` and is converted internally to
+   ``Å^3`` units for the actual fit. The prefactor uses ``total_momentum_J``
+   when provided, otherwise ``spin``. Dimensionless parameters such as
    ``rho_over_ax`` are not rescaled.
 
 Temperature Dependence of Magnetic Susceptibility Fitting
@@ -701,3 +702,26 @@ g-tensor and effective Hamiltonian with the canonical susceptibility frame,
 checks that both tensors share that frame, and derives the TIP correction from
 the selected reference temperature. No fixed mapping of g principal values to
 the x/y axes is assumed.
+
+Susceptibility Output Units
+--------------------------
+
+The ``fit_susc`` and ``predict`` commands accept
+``--susc_units A3``, ``--susc_units "cm3 mol-1"``, and
+``--susc_units reduced``. The default remains ``A3``.
+
+Reduced output reports ``chi_reduced = chi * T / C``. The Curie prefactor
+``C`` uses ``J(J+1)`` when ``hyperfine:total_momentum_J`` is provided,
+otherwise ``S(S+1)``. A positive finite temperature and angular momentum
+are required. Susceptibility uncertainties use the same scale; angles,
+``rho_over_ax``, chemical shifts, and fit statistics retain their units.
+
+The susceptibility CSV stores reduced columns with the ``(reduced)`` suffix
+and a ``Curie_prefactor (Å^3 K)`` column for each row. The CSV reader uses
+that prefactor and temperature to restore internal Å³ values. Reduced CSV
+values use 15 significant digits to preserve the normalization on import.
+Fitted-shift annotations use the same conversion. VT plots already show
+Curie-normalized susceptibility and are not rescaled a second time.
+
+``susc_fit:input_units`` independently controls input parameter units.
+Changing output units does not change fitted parameters or predictions.

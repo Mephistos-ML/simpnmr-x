@@ -15,8 +15,13 @@ from typing import Any, List, Sequence, Tuple
 import numpy as np
 import pandas as pd
 
-from simpnmr_x.core.conv.a3_to_cm3mol import A3_TO_CM3MOL
-from simpnmr_x.core.conv.cm3mol_to_a3 import cm3mol_to_a3
+from simpnmr_x.core.conv.a3.a3_to_cm3mol import A3_TO_CM3MOL
+from simpnmr_x.core.conv.a3.a3_to_reduced import a3_to_reduced
+from simpnmr_x.core.conv.cm3mol.cm3mol_to_a3 import cm3mol_to_a3
+from simpnmr_x.core.conv.reduced.reduced_to_a3 import reduced_to_a3
+from simpnmr_x.core.fitting.variable_temperatures.components import (
+    compute_curie_prefactor,
+)
 from simpnmr_x.io.csv.csv_util import read_csv_safe, write_csv_safe
 
 logger = logging.getLogger(__name__)
@@ -60,6 +65,12 @@ def read_susceptibilities_csv(
 
     renamer = {}
     for name in data.keys():
+        if "(reduced)" in name:
+            temperatures = data["Temperature (K)"].to_numpy(dtype=float)
+            prefactors = data["Curie_prefactor (Å^3 K)"].to_numpy(dtype=float)
+            data[name] = reduced_to_a3(data[name].to_numpy(), temperatures, prefactors)
+            renamer[name] = name.replace("(reduced)", "(Å^3)")
+            continue
         if "(cm^3 mol^-1)" in name:
             data[name] = cm3mol_to_a3(data[name].to_numpy())
             renamer[name] = name.replace("(cm^3 mol^-1)", "(Å^3)")
@@ -113,7 +124,7 @@ def save_susc(
         susc_models: Optional fitted susceptibility models used to add parameter
             standard deviations and fit metrics.
         susc_units: Units for susceptibility values. Supported values are
-        ``"A3"`` and ``"cm3 mol-1"``.
+        ``"A3"``, ``"cm3 mol-1"``, and ``"reduced"`` (χT/C).
         delimiter: CSV delimiter.
         comment: Optional comment line appended to the file header. If provided,
             it must begin with ``#`` (or will be prefixed automatically).
@@ -123,13 +134,34 @@ def save_susc(
     """
 
     if susc_units == "A3":
-        conv = 1.0
-        unit_label = r"Å^3"
+        scales = [1.0 for molecule in molecules]
     elif susc_units == "cm3 mol-1":
-        conv = A3_TO_CM3MOL
-        unit_label = r"cm^3 mol^-1"
+        scales = [A3_TO_CM3MOL for molecule in molecules]
+    elif susc_units == "reduced":
+        scales = []
+        for molecule in molecules:
+            momentum = molecule.electronic.total_J
+            if momentum is None:
+                momentum = molecule.electronic.spin_S
+            if momentum is None or not np.isfinite(momentum) or momentum <= 0:
+                raise ValueError("Reduced output requires positive finite J or spin S")
+            scales.append(
+                float(
+                    a3_to_reduced(
+                        1.0,
+                        molecule.susc.temperature,
+                        compute_curie_prefactor(momentum),
+                    )
+                )
+            )
     else:
-        raise ValueError("Unsupported susc_units. Expected 'A3' or 'cm3 mol-1'.")
+        raise ValueError("Expected susceptibility units A3, cm3 mol-1, or reduced")
+    conv = 1.0
+    unit_label = {
+        "A3": "Å^3",
+        "cm3 mol-1": "cm^3 mol^-1",
+        "reduced": "reduced",
+    }[susc_units]
 
     # Write susceptibility tensor to CSV
     out = {
@@ -222,6 +254,11 @@ def save_susc(
         out["MAE (ppm)"] = [model.mae for model in susc_models]
         out["RMSE (ppm)"] = [model.rmse for model in susc_models]
         for key in susc_models[0].fit_stdev:
+            if key in {"alpha", "beta", "gamma"}:
+                out[f"{key}-s-dev (degrees)"] = [
+                    model.fit_stdev[key] for model in susc_models
+                ]
+                continue
             if key == "rho_over_ax":
                 continue
             out[f"chi_{key}-s-dev ({unit_label})"] = [
@@ -231,6 +268,15 @@ def save_susc(
     to_pop = [key for key, value in out.items() if value is None]
     for pop in to_pop:
         out.pop(pop)
+
+    for column, values in out.items():
+        if column.startswith(("chi_", "dchi_")):
+            out[column] = [value * scale for value, scale in zip(values, scales)]
+    if susc_units == "reduced":
+        out["Curie_prefactor (Å^3 K)"] = [
+            float(molecule.susc.temperature) / scale
+            for molecule, scale in zip(molecules, scales)
+        ]
 
     df = pd.DataFrame(data=out)
 
@@ -247,7 +293,10 @@ def save_susc(
         }
     )
 
-    write_csv_safe(df, file_name, comment)
+    if susc_units == "reduced":
+        write_csv_safe(df, file_name, comment, float_format="%.15g")
+    else:
+        write_csv_safe(df, file_name, comment)
 
     if verbose:
         logger.info("Susceptibility data written to %s", file_name)

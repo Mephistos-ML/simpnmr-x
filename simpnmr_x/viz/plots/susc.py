@@ -56,15 +56,19 @@ def plot_chit_comparison(
     fig, ax = create_canvas(spec.profile, variant="horizontal")
     palette = spec.palette
     colours = {
-        "XRD Geometry": palette.secondary,
+        "XRD Geometry": palette.highlight,
         "Opt. Geometry": palette.primary,
-        "Opt. Geom. - TIP": palette.highlight,
+        "Opt. Geom (TIP excl.)": palette.secondary,
     }
-    markers = ["s", "o", "^"]
+    line_styles = {
+        "XRD Geometry": ":",
+        "Opt. Geometry": "--",
+        "Opt. Geom (TIP excl.)": "-",
+    }
     chi_t_min = np.inf
     chi_t_max = -np.inf
 
-    for index, (label, values) in enumerate(series.items()):
+    for label, values in series.items():
         if len(values) != 2:
             raise ValueError(f"Series {label!r} must contain temperature and chi_t")
         temperatures = np.asarray(values[0], dtype=float)
@@ -82,11 +86,11 @@ def plot_chit_comparison(
             temperatures,
             chi_t,
             color=colours.get(label, palette.primary),
-            linestyle="-",
-            linewidth=spec.glyphs.line_lw,
-            marker=markers[index % len(markers)],
+            linestyle=line_styles.get(label, "-"),
+            linewidth=2 * spec.glyphs.line_lw,
+            marker=None,
             markersize=spec.glyphs.ms,
-            markeredgecolor=spec.glyphs.mec,
+            markeredgecolor=colours.get(label, palette.primary),
             label=label,
         )
 

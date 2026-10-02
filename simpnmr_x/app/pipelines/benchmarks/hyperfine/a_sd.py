@@ -7,20 +7,14 @@ import os
 
 from simpnmr_x.app.params.options import BenchmarkAsdRunOptions
 from simpnmr_x.app.pipelines.benchmarks.hyperfine.runner import (
-    plot_hyperfine_benchmark_summary,
-    plot_hyperfine_functional_max_summary,
+    plot_hyperfine_functional_mean_summary,
 )
 from simpnmr_x.app.pipelines.benchmarks.hyperfine.sources import (
     group_loaded_sources_by_functional,
     load_hyperfine_benchmark_sources,
 )
 from simpnmr_x.core.benchmarks.hyperfine.a_sd import (
-    summarize_a_sd_max_by_nucleus,
     summarize_a_sd_ranges_by_functional_and_nucleus,
-)
-from simpnmr_x.viz.plots.benchmarks import (
-    plot_a_sd_functional_max_curve,
-    plot_a_sd_spread,
 )
 from simpnmr_x.viz.style.theme import apply_profile
 
@@ -41,24 +35,21 @@ def run_benchmark_a_sd(config, options: BenchmarkAsdRunOptions | None = None) ->
     a_sd_summary = summarize_a_sd_ranges_by_functional_and_nucleus(
         group_loaded_sources_by_functional(signals)
     )
-    plot_hyperfine_benchmark_summary(
+    plot_hyperfine_functional_mean_summary(
         a_sd_summary,
+        isotopes_by_nucleus={
+            nucleus.label_nn: nucleus.isotope
+            for source in signals
+            for nucleus in source["molecule"].nuclei
+        },
         output_dir=config.project_name,
         spec=spec,
         show=options.runtime.show_plots,
-        plot_spread=plot_a_sd_spread,
-        filename_metric="A_SD",
-        window_metric="A_sd",
-    )
-    plot_hyperfine_functional_max_summary(
-        summarize_a_sd_max_by_nucleus(
-            a_sd_summary,
-            max_label_tolerance=config.max_label_tolerance,
+        y_label=(
+            r"$\overline{A}_{\mathregular{SD}}^{\mathregular{ax}}$ "
+            r"(ppm Å$^\mathregular{-3}$)"
         ),
-        output_dir=config.project_name,
-        spec=spec,
-        show=options.runtime.show_plots,
-        plot_max_curve=plot_a_sd_functional_max_curve,
+        title_metric=r"$\overline{A}_{\mathregular{SD}}^{\mathregular{ax}}$",
         filename_metric="A_SD",
         log_metric="A_sd",
         window_metric="A_sd",

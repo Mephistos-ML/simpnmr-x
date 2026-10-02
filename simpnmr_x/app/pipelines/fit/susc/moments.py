@@ -11,7 +11,7 @@ import os
 import numpy as np
 
 from simpnmr_x.app.policies.linewidth_r6 import resolve_r6_linewidth_inputs
-from simpnmr_x.core.conv.freq_to_ppm import signal_widths_hz_to_ppm
+from simpnmr_x.core.conv.freq.freq_to_ppm import signal_widths_hz_to_ppm
 from simpnmr_x.core.domain.exp import Experiment
 from simpnmr_x.core.domain.mol import Molecule
 from simpnmr_x.core.fitting.susceptibility.fitters.moments import (

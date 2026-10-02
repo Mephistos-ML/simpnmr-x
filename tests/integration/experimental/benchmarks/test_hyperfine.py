@@ -70,8 +70,8 @@ def test_benchmark_a_fc_with_orca6_hfc(tmp_path: Path):
         f"Command failed with return code {result.returncode}\nstdout:\n"
         f"{result.stdout}\nstderr:\n{result.stderr}"
     )
-    assert (project_dir / "B3LYP_C_A_FC_benchmark_spread.pdf").exists()
-    assert (project_dir / "C_A_FC_benchmark_max_curve.pdf").exists()
+    assert not list(project_dir.glob("*_benchmark_spread.*"))
+    assert (project_dir / "C_A_FC_benchmark_mean_curves.pdf").exists()
 
     report = read_csv_safe(project_dir / "A_FC_benchmark_max.csv")
     assert list(report.columns) == [
@@ -105,5 +105,5 @@ def test_benchmark_a_sd_with_orca6_hfc(tmp_path: Path):
         f"Command failed with return code {result.returncode}\nstdout:\n"
         f"{result.stdout}\nstderr:\n{result.stderr}"
     )
-    assert (project_dir / "B3LYP_C_A_SD_benchmark_spread.pdf").exists()
-    assert (project_dir / "C_A_SD_benchmark_max_curve.pdf").exists()
+    assert not list(project_dir.glob("*_benchmark_spread.*"))
+    assert (project_dir / "C_A_SD_benchmark_mean_curves.pdf").exists()

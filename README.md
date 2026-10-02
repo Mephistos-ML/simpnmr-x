@@ -4,6 +4,7 @@
 
 [![Docs](https://img.shields.io/badge/docs-simpnmr--x-blue)](https://mephistos-ml.github.io/simpnmr-x/)
 [![CI](https://github.com/Mephistos-ML/simpnmr-x/actions/workflows/ci.yml/badge.svg)](https://github.com/Mephistos-ML/simpnmr-x/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/Mephistos-ML/simpnmr-x/branch/main/graph/badge.svg?flag=python)](https://codecov.io/gh/Mephistos-ML/simpnmr-x)
 [![PyPI](https://img.shields.io/pypi/v/simpnmr-x.svg)](https://pypi.org/project/simpnmr-x/)
 [![License](https://img.shields.io/badge/license-GPL--3.0--or--later-green)](LICENSE)
 

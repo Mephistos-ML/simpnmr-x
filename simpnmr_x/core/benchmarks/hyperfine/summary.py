@@ -127,6 +127,29 @@ def summarize_hyperfine_metric_max_by_nucleus(
     return max_by_nucleus
 
 
+def sort_functionals_by_mean_absolute_signal_value(
+    summary: dict[str, dict[str, dict[str, dict[str, object]]]],
+    nucleus_label: str,
+) -> list[str]:
+    """Order functionals by the mean absolute signal mean for one nucleus.
+
+    Args:
+        summary: Functional, nucleus, and signal summaries containing means.
+        nucleus_label: Nucleus whose signals determine the ranking.
+
+    Returns:
+        Functional labels in ascending order of mean absolute signal mean.
+    """
+    scores: list[tuple[float, str]] = []
+    for functional, nucleus_summary in summary.items():
+        signals = nucleus_summary.get(nucleus_label, {})
+        if signals:
+            values = [abs(float(row["mean"])) for row in signals.values()]
+            score = float(np.mean(values))
+            scores.append((score, functional))
+    return [functional for _, functional in sorted(scores)]
+
+
 def _get_signal_label_max(
     *,
     summary: dict[str, dict[str, dict[str, dict[str, object]]]],
