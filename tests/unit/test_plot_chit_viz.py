@@ -26,7 +26,7 @@ def test_plot_chit_comparison_uses_temperature_axis(monkeypatch):
                     np.asarray([2.0, 300.0]),
                     np.asarray([1.1, 2.1]),
                 ),
-                "Opt. Geom. - TIP": (
+                "Opt. Geom (TIP excl.)": (
                     np.asarray([2.0, 300.0]),
                     np.asarray([1.2, 2.2]),
                 ),
@@ -44,8 +44,10 @@ def test_plot_chit_comparison_uses_temperature_axis(monkeypatch):
     assert axis.get_ylim() == pytest.approx((0.94, 2.32))
     assert axis.get_xlabel() == r"$T$ (K)"
     assert [line.get_color() for line in axis.lines] == [
-        spec.palette.secondary,
-        spec.palette.primary,
         spec.palette.highlight,
+        spec.palette.primary,
+        spec.palette.secondary,
     ]
+    assert [line.get_linestyle() for line in axis.lines] == [":", "--", "-"]
+    assert [line.get_linewidth() for line in axis.lines] == pytest.approx([1.4] * 3)
     plt.close(figure)
